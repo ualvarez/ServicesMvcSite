@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.EntityFrameworkCore;
 
 namespace EmployeeManagement
 {
@@ -26,9 +27,13 @@ namespace EmployeeManagement
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContextPool<AppDbContext>(options =>
+            {
+                options.UseSqlServer(_config.GetConnectionString("EmployeeDBConnection"));
+            });
             services.AddControllersWithViews().AddXmlSerializerFormatters();            
             //services.AddMvc(option => option.EnableEndpointRouting = false).AddXmlSerializerFormatters();
-            services.AddSingleton<IEmployeeRepository, MockEmployeeRepository>();
+            services.AddScoped<IEmployeeRepository, SQLEmployeeRepository>();
             services.AddMvc().AddRazorRuntimeCompilation();
 
         }

@@ -3,9 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30002.166
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeeManagement", "EmployeeManagement\EmployeeManagement.csproj", "{BDB51B20-2EFB-447B-8E1E-8A72CBA4F996}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApplication1", "WebApplication1\WebApplication1.csproj", "{A41CAEBB-6391-4C0B-B7A6-2C938C03443A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmployeeManagement", "EmployeeManagement\EmployeeManagement.csproj", "{BDB51B20-2EFB-447B-8E1E-8A72CBA4F996}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +15,6 @@ Global
 		{BDB51B20-2EFB-447B-8E1E-8A72CBA4F996}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BDB51B20-2EFB-447B-8E1E-8A72CBA4F996}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BDB51B20-2EFB-447B-8E1E-8A72CBA4F996}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A41CAEBB-6391-4C0B-B7A6-2C938C03443A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A41CAEBB-6391-4C0B-B7A6-2C938C03443A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A41CAEBB-6391-4C0B-B7A6-2C938C03443A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A41CAEBB-6391-4C0B-B7A6-2C938C03443A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
