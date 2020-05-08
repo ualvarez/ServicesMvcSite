@@ -1,8 +1,10 @@
 ﻿using EmployeeManagement.Models;
 using EmployeeManagement.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,39 +13,63 @@ using System.Threading.Tasks;
 
 namespace EmployeeManagement.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly IEmployeeRepository _employeeRepository;
-        private readonly IHostingEnvironment hostingEnvironment;
+        private readonly IWebHostEnvironment hostingEnvironment;
+        private readonly ILogger logger;
 
-        public HomeController(IEmployeeRepository employeeRepository, IHostingEnvironment hostingEnvironment)
-        {
+        public HomeController(IEmployeeRepository employeeRepository,
+            IWebHostEnvironment hostingEnvironment,
+            ILogger<HomeController> logger)
+        {            
             _employeeRepository = employeeRepository;
             this.hostingEnvironment = hostingEnvironment;
+            this.logger = logger;
         }
+
+        [AllowAnonymous]
         public ViewResult Index()
         {
             var model = _employeeRepository.GetAllEmployee();
             return View(model);
         }
-
-        public ViewResult Details(int id)
+        [AllowAnonymous]
+        public ViewResult Details(int? id)
         {
+            // throw new Exception("Error in Details View");
+            logger.LogTrace("Trace Log");
+            logger.LogDebug("Debug Log");
+            logger.LogInformation("Information Log");
+            logger.LogWarning("Warning Log");
+            logger.LogError("Error Log");
+            logger.LogCritical("Critical Log");
+
+
+            Employee employee = _employeeRepository.GetEmployee(id.Value);
+
+            if(employee == null)
+            {
+                Response.StatusCode = 404;
+                return View("EmployeeNotFound", id.Value);
+            }
+
             HomeDetailsViewModel homeDetailsViewModel = new HomeDetailsViewModel()
             {
-                Employee = _employeeRepository.GetEmployee(id),
+                Employee = employee,
                 PageTitle = "Employee Details"
             };
             return View(homeDetailsViewModel);
         }
 
-        [HttpGet]
+        [HttpGet]     
         public ViewResult Create()
         {
             return View();
         }
 
-        [HttpGet]
+        [HttpGet]       
         public ViewResult Edit(int id)
         {
             Employee employee = _employeeRepository.GetEmployee(id);
@@ -57,7 +83,7 @@ namespace EmployeeManagement.Controllers
             };
             return View(employeeEditViewModel);
         }
-        [HttpPost]
+        [HttpPost]       
         public IActionResult Edit(EmployeeEditViewModel model)
         {
             if (ModelState.IsValid)
@@ -99,7 +125,7 @@ namespace EmployeeManagement.Controllers
             return uniqueFileName;
         }
 
-        [HttpPost]
+        [HttpPost]     
         public IActionResult Create(EmployeeCreateViewModel model)
         {
             if (ModelState.IsValid)

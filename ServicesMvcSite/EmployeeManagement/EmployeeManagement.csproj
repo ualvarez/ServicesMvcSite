@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-	
+	  <AspNetCoreHostingModel>OutOfProcess</AspNetCoreHostingModel>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,9 +14,12 @@
     <Compile Remove="Migrations\20200424012239_AddPhotoPathColumn.Designer.cs" />
     <Compile Remove="Migrations\20200424012345_AddSomeProperty.cs" />
     <Compile Remove="Migrations\20200424012345_AddSomeProperty.Designer.cs" />
+    <Compile Remove="Migrations\20200503203945_extendsIdentityUser.cs" />
+    <Compile Remove="Migrations\20200503203945_extendsIdentityUser.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.3" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.3" />
@@ -24,7 +27,8 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.1" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.2" />
+    <PackageReference Include="NLog.Web.AspNetCore" Version="4.9.2" />
   </ItemGroup>
 
 </Project>

@@ -11,6 +11,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Authorization;
 
 namespace EmployeeManagement
 {
@@ -31,7 +34,27 @@ namespace EmployeeManagement
             {
                 options.UseSqlServer(_config.GetConnectionString("EmployeeDBConnection"));
             });
-            services.AddControllersWithViews().AddXmlSerializerFormatters();            
+            services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+            {
+                options.Password.RequiredLength = 10;
+                options.Password.RequiredUniqueChars = 3;
+            }).AddEntityFrameworkStores<AppDbContext>();
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("DeleteRolePolicy",
+                    policy => policy.RequireClaim("Delete Role"));
+
+                options.AddPolicy("AdminRolePolicy",
+                    policy => policy.RequireRole("Admin"));
+
+            });
+            services.AddControllersWithViews(options =>
+            {
+                var policy = new AuthorizationPolicyBuilder()
+                    .RequireAuthenticatedUser()
+                    .Build();
+                options.Filters.Add(new AuthorizeFilter(policy));
+            }).AddXmlSerializerFormatters();
             //services.AddMvc(option => option.EnableEndpointRouting = false).AddXmlSerializerFormatters();
             services.AddScoped<IEmployeeRepository, SQLEmployeeRepository>();
             services.AddMvc().AddRazorRuntimeCompilation();
@@ -41,20 +64,28 @@ namespace EmployeeManagement
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
+            else
+            {
+                app.UseExceptionHandler("/Error");
+                app.UseStatusCodePagesWithReExecute("/Error/{0}");
+            }
             app.UseStaticFiles();
+            app.UseAuthentication();
 
 
             //app.UseMvcWithDefaultRoute();
 
             app.UseRouting();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
-               
+
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
