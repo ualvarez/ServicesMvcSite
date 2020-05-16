@@ -59,7 +59,7 @@ namespace EmployeeManagement.Controllers
 
                 // If the user has the claim, set IsSelected property to true, so the checkbox
                 // next to the claim is checked on the UI
-                if (existingUserClaims.Any(c => c.Type == claim.Type))
+                if (existingUserClaims.Any(c => c.Type == claim.Type && c.Value == "true"))
                 {
                     userClaim.IsSelected = true;
                 }
@@ -94,7 +94,7 @@ namespace EmployeeManagement.Controllers
 
             // Add all the claims that are selected on the UI
             result = await userManager.AddClaimsAsync(user,
-                model.Claims.Where(c => c.IsSelected).Select(c => new Claim(c.ClaimType, c.ClaimType)));
+                model.Claims.Select(c => new Claim(c.ClaimType, c.IsSelected ? "true" : "false")));
 
             if (!result.Succeeded)
             {
@@ -107,6 +107,7 @@ namespace EmployeeManagement.Controllers
         }
 
         [HttpGet]
+        [Authorize(Policy = "EditRolePolicy")]
         public async Task<IActionResult> ManageUserRoles(string userId)
         {
             ViewBag.userId = userId;
@@ -145,6 +146,7 @@ namespace EmployeeManagement.Controllers
         }
 
         [HttpPost]
+        [Authorize(Policy = "EditRolePolicy")]
         public async Task<IActionResult> ManageUserRoles(List<UserRolesViewModel> model, string userId)
         {
             var user = await userManager.FindByIdAsync(userId);
@@ -267,7 +269,7 @@ namespace EmployeeManagement.Controllers
                 Email = user.Email,
                 UserName = user.UserName,
                 City = user.City,
-                Claims = userClaims.Select(c => c.Value).ToList(),
+                Claims = userClaims.Select(c => c.Type + " : " + c.Value).ToList(),
                 Roles = userRoles
             };
 
@@ -352,7 +354,7 @@ namespace EmployeeManagement.Controllers
             return View(roles);
         }
 
-        [HttpGet]
+        [HttpGet]     
         public async Task<IActionResult> EditRole(string id)
         {
             var role = await roleManager.FindByIdAsync(id);
@@ -380,7 +382,7 @@ namespace EmployeeManagement.Controllers
             return View(model);
         }
 
-        [HttpPost]
+        [HttpPost]     
         public async Task<IActionResult> EditRole(EditRoleViewModel model)
         {
             var role = await roleManager.FindByIdAsync(model.Id);
@@ -485,6 +487,11 @@ namespace EmployeeManagement.Controllers
         }
 
 
-
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult AccessDenied()
+        {
+            return View();
+        }
     }
 }

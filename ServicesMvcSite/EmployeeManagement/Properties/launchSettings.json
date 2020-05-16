@@ -1,10 +1,10 @@
-﻿{
+{
   "iisSettings": {
-    "windowsAuthentication": false, 
-    "anonymousAuthentication": true, 
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:52894",
-      "sslPort": 0
+      "applicationUrl": "https://localhost:44332/",
+      "sslPort": 44332
     }
   },
   "profiles": {
@@ -12,17 +12,17 @@
       "commandName": "IISExpress",
       "launchBrowser": true,
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Production",
-        "MyKey": "Value of MyKey form Enviroment Variable"
+        "MyKey": "Value of MyKey form Enviroment Variable",
+        "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
     "EmployeeManagement": {
       "commandName": "Project",
       "launchBrowser": true,
-      "applicationUrl": "http://localhost:5000",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
-      }
+      },
+      "applicationUrl": "http://localhost:5000"
     }
   }
 }
