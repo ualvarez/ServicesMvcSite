@@ -58,7 +58,7 @@ namespace EmployeeManagement.Controllers
                         ModelState.AddModelError(string.Empty, error.Description);
                     }
                     return View();
-                }
+                } 
 
                 await signInManager.RefreshSignInAsync(user);
 
