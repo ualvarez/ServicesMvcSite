@@ -1,13 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mail;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using EmployeeManagement.Models;
+using EmployeeManagement.Security;
+using EmployeeManagement.Utilities;
 using EmployeeManagement.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 namespace EmployeeManagement.Controllers
@@ -17,14 +22,18 @@ namespace EmployeeManagement.Controllers
         private readonly UserManager<ApplicationUser> userManager;
         private readonly SignInManager<ApplicationUser> signInManager;
         private readonly ILogger<AccountController> logger;
+        private readonly IConfiguration configuration;
+        private readonly IDataProtectionProvider dataProtectionProvider;    
 
         public AccountController(UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
-            ILogger<AccountController> logger)
+            ILogger<AccountController> logger,
+            IConfiguration configuration)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.logger = logger;
+            this.configuration = configuration;          
         }
 
         [HttpGet]
@@ -200,6 +209,10 @@ namespace EmployeeManagement.Controllers
                     // Log the password reset link
                     logger.Log(LogLevel.Warning, passwordResetLink);
 
+                    EMail eMail = new EMail(this.configuration);
+                    eMail.Send(model.Email, "ResetPassword from Employee Management", $"<b>To confirm the reset password please click on this link {passwordResetLink} </b>");
+
+                  
                     // Send the user to Forgot Password Confirmation view
                     return View("ForgotPasswordConfirmation");
                 }
